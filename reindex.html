@@ -1,0 +1,114 @@
+<!-- 
+    This is the HTML file that governs the page's contents!
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>New Tab</title>
+
+	<link rel="stylesheet" type="text/css" href="style.css" />
+    <style>
+        body {
+            height: 100%;
+            background-image:url("https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        html {
+            height: 100%;
+        }
+        div {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+        }
+        .container {
+            position: relative;
+        }
+
+    </style>
+</head>
+
+<body>
+	<div class="middle">
+		<span id="time"></span><br>
+        <span id="date"></span><br>
+        <span id="weather"></span>
+        
+        <div id="box">
+            <!-- the DIV that will contain the widget -->
+            <div class="weatherWidget"></div>
+            <p>Current date and time:</p>
+            <input type="text" id="currentDate">
+            <p style="font-size: larger; color: rgb(255, 255, 255); font-family:sans-serif;">Hello fellow user!</p>
+            <p style="font-size: larger; color: rgb(255, 255, 255); font-family: sans-serif;">"Remember, the greatest views come after the hardest climbs"</p>
+            <button class="getImagesButton" onclick="thefunc()">Get new background</button>
+        </div>
+
+    </div>
+
+    <!-- Includes JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/script.js"></script>
+</body>
+<script>
+    const requestUrl =
+ 'https://api.unsplash.com/search/photos?query=mountain&client_id=Drt-ZVEBKCLZWg-DVPvBOP3MjN3d1_Pq-JINtHrQFhA';
+    const getImagesButton = document.querySelector('.getImagesButton');
+    const imageToDisplay = document.querySelector('body');
+
+    
+
+    async function getNewImage() {
+        let randomNumber = Math.floor(Math.random() * 10);
+        return fetch(requestUrl)
+        .then((response) => response.json())
+        .then((data) => {
+            let allImages = data.results[randomNumber];
+            return allImages.urls.regular;
+        });
+    }
+    async function thefunc() {
+        getImagesButton.addEventListener('click', async () => {
+            let randomImage = await getNewImage();
+            console.log(randomImage);
+            imageToDisplay.style.backgroundImage = `url("${randomImage}")`;
+        });
+        
+    }
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
+    document.getElementById("currentDate").value = dateTime;
+    window.weatherWidgetConfig =  window.weatherWidgetConfig || [];
+    window.weatherWidgetConfig.push({
+                    selector:".weatherWidget",
+                    apiKey:"X4SB7R3VYB6EE3W84ULWMPDUB", //Sign up for your personal key
+                    location:"Kuwait City, Kuqwait", //Enter an address
+                    unitGroup:"metric", //"us" or "metric"
+                    forecastDays:5, //how many days forecast to show
+                    title:"London,UK", //optional title to show in the 
+                    showTitle:true, 
+                    showConditions:true
+    });
+  
+    (function() {
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://www.visualcrossing.com/widgets/forecast-simple/weather-forecast-widget-simple.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+    })();
+
+</script>
+
+</html>
